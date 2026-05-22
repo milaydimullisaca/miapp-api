@@ -17,11 +17,11 @@ class TaskController extends Controller
     public function store(Request $request)
     {
         $task = Task::create([
-            'titulo' => $request->title,
-            'descripcion' => $request->description,
-            'imagem' => $request->image,
-            'latitud' => $request->latitude,
-            'longitud' => $request->longitude,
+           'title' => $request->title,
+           'description' => $request->description,
+           'image' => $request->image,
+           'latitude' => $request->latitude,
+           'longitude' => $request->longitude,
         ]);
 
         return response()->json($task, 201);
