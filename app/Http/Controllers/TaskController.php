@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use App\Models\Task;
@@ -7,40 +6,61 @@ use Illuminate\Http\Request;
 
 class TaskController extends Controller
 {
-    // LISTAR
-    public function index()
-    {
-        return response()->json(Task::all());
-    }
+    // LISTAR POR USUARIO
+    public function index(Request $request)
+{
+    $user = $request->user();
+
+    $tasks = Task::where('user_id', $user->id)->get();
+
+    return response()->json($tasks);
+}
 
     // CREAR
     public function store(Request $request)
-    {
-        $task = Task::create([
-           'title' => $request->title,
-           'description' => $request->description,
-           'image' => $request->image,
-           'latitude' => $request->latitude,
-           'longitude' => $request->longitude,
-        ]);
+{
+    $request->validate([
+        'title' => 'required',
+        'description' => 'required',
+        'image' => 'nullable|image',
+    ]);
 
-        return response()->json($task, 201);
+    $imagePath = null;
+
+    if ($request->hasFile('image')) {
+        $imagePath = $request->file('image')->store('tasks', 'public');
     }
+
+    $task = Task::create([
+        'title' => $request->title,
+        'description' => $request->description,
+        'latitude' => $request->latitude,
+        'longitude' => $request->longitude,
+        'image' => $imagePath,
+        'user_id' => auth()->id(),
+    ]);
+
+    return response()->json($task);
+}
 
     // MOSTRAR UNO
     public function show(string $id)
     {
-        return response()->json(
-            Task::findOrFail($id)
-        );
+        return response()->json(Task::findOrFail($id));
     }
 
-    // EDITAR
+    // ACTUALIZAR
     public function update(Request $request, string $id)
     {
         $task = Task::findOrFail($id);
 
-        $task->update($request->all());
+        $task->update([
+            'title' => $request->title,
+            'description' => $request->description,
+            'image' => $request->image,
+            'latitude' => $request->latitude,
+            'longitude' => $request->longitude,
+        ]);
 
         return response()->json($task);
     }
@@ -50,8 +70,6 @@ class TaskController extends Controller
     {
         Task::destroy($id);
 
-        return response()->json([
-            'message' => 'Task eliminada'
-        ]);
+        return response()->json(['message' => 'Task eliminada']);
     }
 }

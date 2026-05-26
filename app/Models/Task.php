@@ -14,5 +14,6 @@ class Task extends Model
         'image',
         'latitude',
         'longitude',
+        'user_id',
     ];
 }
