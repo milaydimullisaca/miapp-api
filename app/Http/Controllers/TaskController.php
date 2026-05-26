@@ -19,30 +19,47 @@ class TaskController extends Controller
     // CREAR
     public function store(Request $request)
 {
-    $request->validate([
-        'title' => 'required',
-        'description' => 'required',
-        'image' => 'nullable|image',
-    ]);
+    try {
 
-    $imagePath = null;
+        $request->validate([
+            'title' => 'required',
+            'description' => 'required',
+            'image' => 'nullable|image',
+        ]);
 
-    if ($request->hasFile('image')) {
-        $imagePath = $request->file('image')->store('tasks', 'public');
+        $imagePath = null;
+
+        if ($request->hasFile('image')) {
+
+            $imagePath = $request
+                ->file('image')
+                ->store('tasks', 'public');
+        }
+
+        $task = Task::create([
+            'title' => $request->title,
+            'description' => $request->description,
+            'latitude' => $request->latitude,
+            'longitude' => $request->longitude,
+            'image' => $imagePath,
+            'user_id' => auth()->id(),
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'task' => $task
+        ], 201);
+
+    } catch (\Throwable $e) {
+
+        return response()->json([
+            'success' => false,
+            'error' => $e->getMessage(),
+            'line' => $e->getLine(),
+            'file' => $e->getFile(),
+        ], 500);
     }
-
-    $task = Task::create([
-        'title' => $request->title,
-        'description' => $request->description,
-        'latitude' => $request->latitude,
-        'longitude' => $request->longitude,
-        'image' => $imagePath,
-        'user_id' => auth()->id(),
-    ]);
-
-    return response()->json($task);
 }
-
     // MOSTRAR UNO
     public function show(string $id)
     {
