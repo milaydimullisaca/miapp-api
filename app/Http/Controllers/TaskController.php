@@ -71,21 +71,35 @@ class TaskController extends Controller
     }
 
     // 🔥 NUEVO: CAMBIAR CHECKBOX
-    public function toggleStatus($id)
-    {
-        $task = Task::findOrFail($id);
+   public function toggleStatus($id)
+{
+    try {
+
+        $task = Task::where('id', $id)
+            ->where('user_id', auth()->id())
+            ->first();
+
+        if (!$task) {
+            return response()->json([
+                'message' => 'Task no encontrada'
+            ], 404);
+        }
 
         $task->is_done = !$task->is_done;
         $task->save();
 
-        return response()->json($task);
-    }
+        return response()->json([
+            'success' => true,
+            'id' => $task->id,
+            'is_done' => $task->is_done
+        ]);
 
-    // ELIMINAR
-    public function destroy(string $id)
-    {
-        Task::destroy($id);
+    } catch (\Throwable $e) {
 
-        return response()->json(['message' => 'Task eliminada']);
+        return response()->json([
+            'message' => 'Error toggle',
+            'error' => $e->getMessage()
+        ], 500);
     }
+}
 }
