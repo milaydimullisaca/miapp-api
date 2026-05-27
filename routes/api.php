@@ -10,35 +10,49 @@ use App\Http\Controllers\TaskController;
 
 /*
 |--------------------------------------------------------------------------
-| Rutas públicas
+| 🔓 RUTAS PÚBLICAS
 |--------------------------------------------------------------------------
 */
 
 Route::post('register', [AuthController::class, 'register']);
 Route::post('login', [AuthController::class, 'login']);
 
-
-
 /*
 |--------------------------------------------------------------------------
-| Rutas protegidas
+| 🔐 RUTAS PROTEGIDAS (SANCTUM)
 |--------------------------------------------------------------------------
 */
 
 Route::middleware('auth:sanctum')->group(function () {
 
+    // 👤 USUARIO LOGUEADO
     Route::get('/user', function (Request $request) {
         return $request->user();
     });
 
+    /*
+    |--------------------------------------------------------------------------
+    | 📌 TASKS
+    |--------------------------------------------------------------------------
+    */
+
     Route::apiResource('tasks', TaskController::class);
+
+    // 🔥 CHECKBOX (COMPLETAR / DESMARCAR)
+    Route::put('/tasks/{id}/toggle', [TaskController::class, 'toggleStatus']);
+
+    /*
+    |--------------------------------------------------------------------------
+    | 👥 PERSONAS
+    |--------------------------------------------------------------------------
+    */
 
     Route::apiResource('personas', PersonaController::class);
 });
 
 /*
 |--------------------------------------------------------------------------
-| Pokemones
+| 🔥 API EXTERNA (POKEMON)
 |--------------------------------------------------------------------------
 */
 
