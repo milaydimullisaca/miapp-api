@@ -15,5 +15,6 @@ class Task extends Model
         'latitude',
         'longitude',
         'user_id',
+        'scheduled_at',
     ];
 }

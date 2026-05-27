@@ -42,7 +42,9 @@ class TaskController extends Controller
             'latitude' => $request->latitude,
             'longitude' => $request->longitude,
             'image' => $imagePath,
+            'scheduled_at' => $request->scheduled_at,
             'user_id' => auth()->id(),
+            
         ]);
 
         return response()->json([
