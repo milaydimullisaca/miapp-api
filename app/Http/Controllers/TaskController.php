@@ -102,4 +102,33 @@ class TaskController extends Controller
         ], 500);
     }
 }
+public function destroy(string $id)
+{
+    try {
+
+        $task = Task::where('id', $id)
+            ->where('user_id', auth()->id())
+            ->first();
+
+        if (!$task) {
+            return response()->json([
+                'message' => 'Task no encontrada'
+            ], 404);
+        }
+
+        $task->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Task eliminada'
+        ]);
+
+    } catch (\Throwable $e) {
+
+        return response()->json([
+            'message' => 'Error al eliminar',
+            'error' => $e->getMessage()
+        ], 500);
+    }
+}
 }
