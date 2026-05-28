@@ -38,7 +38,6 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::apiResource('tasks', TaskController::class);
 
-    // 🔥 CHECKBOX (COMPLETAR / DESMARCAR)
     Route::put('/tasks/{id}/toggle', [TaskController::class, 'toggleStatus']);
 
     /*
