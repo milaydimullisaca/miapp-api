@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
+use Google\Client as GoogleClient;
 
 class AuthController extends Controller
 {
@@ -45,5 +46,44 @@ class AuthController extends Controller
 
         return response()->json(['token' => $token]);
     }
-}
 
+   //login
+    public function googleLogin(Request $request)
+    {
+        $request->validate([
+            'id_token' => 'required'
+        ]);
+
+        $client = new GoogleClient([
+            'client_id' => env('GOOGLE_CLIENT_ID')
+        ]);
+
+        $payload = $client->verifyIdToken($request->id_token);
+
+        if (!$payload) {
+            return response()->json([
+                'message' => 'Token de Google inválido'
+            ], 401);
+        }
+
+        $email = $payload['email'];
+        $name = $payload['name'] ?? 'Usuario';
+
+        $user = User::where('email', $email)->first();
+
+        if (!$user) {
+            $user = User::create([
+                'name' => $name,
+                'email' => $email,
+                'password' => Hash::make(uniqid()),
+            ]);
+        }
+
+        $token = $user->createToken('google-token')->plainTextToken;
+
+        return response()->json([
+            'user' => $user,
+            'token' => $token
+        ]);
+    }
+}

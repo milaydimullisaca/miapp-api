@@ -10,7 +10,7 @@ use App\Http\Controllers\TaskController;
 
 /*
 |--------------------------------------------------------------------------
-| 🔓 RUTAS PÚBLICAS
+| RUTAS PÚBLICAS
 |--------------------------------------------------------------------------
 */
 
@@ -19,20 +19,28 @@ Route::post('login', [AuthController::class, 'login']);
 
 /*
 |--------------------------------------------------------------------------
-| 🔐 RUTAS PROTEGIDAS (SANCTUM)
+| GOOGLE LOGIN (FALTA IMPLEMENTAR CONTROLADOR REAL)
+|--------------------------------------------------------------------------
+*/
+
+Route::post('google-login', [AuthController::class, 'googleLogin']);
+
+/*
+|--------------------------------------------------------------------------
+| RUTAS PROTEGIDAS (SANCTUM)
 |--------------------------------------------------------------------------
 */
 
 Route::middleware('auth:sanctum')->group(function () {
 
-    // 👤 USUARIO LOGUEADO
+    // USUARIO LOGUEADO
     Route::get('/user', function (Request $request) {
         return $request->user();
     });
 
     /*
     |--------------------------------------------------------------------------
-    | 📌 TASKS
+    | TASKS
     |--------------------------------------------------------------------------
     */
 
@@ -42,7 +50,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     /*
     |--------------------------------------------------------------------------
-    | 👥 PERSONAS
+    | PERSONAS
     |--------------------------------------------------------------------------
     */
 
@@ -51,7 +59,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
 /*
 |--------------------------------------------------------------------------
-| 🔥 API EXTERNA (POKEMON)
+| API EXTERNA (POKEMON)
 |--------------------------------------------------------------------------
 */
 
