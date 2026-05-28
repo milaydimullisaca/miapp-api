@@ -70,7 +70,7 @@ class TaskController extends Controller
             ], 404);
         }
 
-        // NUEVA IMAGEN
+        // 🔥 SI HAY NUEVA IMAGEN
         if ($request->hasFile('image')) {
 
             $imagePath = $request->file('image')
@@ -87,15 +87,11 @@ class TaskController extends Controller
 
         $task->longitude = $request->longitude;
 
-       
         $task->scheduled_at = $request->scheduled_at;
 
         $task->save();
 
-        return response()->json([
-            'success' => true,
-            'task' => $task
-        ]);
+        return response()->json($task);
 
     } catch (\Throwable $e) {
 
