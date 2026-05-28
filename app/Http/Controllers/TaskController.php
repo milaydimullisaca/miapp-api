@@ -70,7 +70,7 @@ class TaskController extends Controller
             ], 404);
         }
 
-        // 🔥 SI HAY NUEVA IMAGEN
+        //  SI HAY NUEVA IMAGEN
         if ($request->hasFile('image')) {
 
             $imagePath = $request->file('image')
@@ -97,6 +97,39 @@ class TaskController extends Controller
 
         return response()->json([
             'message' => 'Error al actualizar',
+            'error' => $e->getMessage()
+        ], 500);
+    }
+}
+// CHECKBOX COMPLETAR
+public function toggleStatus($id)
+{
+    try {
+
+        $task = Task::where('id', $id)
+            ->where('user_id', auth()->id())
+            ->first();
+
+        if (!$task) {
+
+            return response()->json([
+                'message' => 'Task no encontrada'
+            ], 404);
+        }
+
+        $task->is_done = !$task->is_done;
+
+        $task->save();
+
+        return response()->json([
+            'success' => true,
+            'is_done' => $task->is_done
+        ]);
+
+    } catch (\Throwable $e) {
+
+        return response()->json([
+            'message' => 'Error toggle',
             'error' => $e->getMessage()
         ], 500);
     }
