@@ -56,22 +56,6 @@ class TaskController extends Controller
 
     // ACTUALIZAR (EDIT NORMAL)
     public function update(Request $request, string $id)
-    {
-        $task = Task::findOrFail($id);
-
-        $task->update([
-            'title' => $request->title,
-            'description' => $request->description,
-            'image' => $request->image,
-            'latitude' => $request->latitude,
-            'longitude' => $request->longitude,
-        ]);
-
-        return response()->json($task);
-    }
-
-    // 🔥 NUEVO: CAMBIAR CHECKBOX
-   public function toggleStatus($id)
 {
     try {
 
@@ -80,24 +64,43 @@ class TaskController extends Controller
             ->first();
 
         if (!$task) {
+
             return response()->json([
                 'message' => 'Task no encontrada'
             ], 404);
         }
 
-        $task->is_done = !$task->is_done;
+        // NUEVA IMAGEN
+        if ($request->hasFile('image')) {
+
+            $imagePath = $request->file('image')
+                ->store('tasks', 'public');
+
+            $task->image = $imagePath;
+        }
+
+        $task->title = $request->title;
+
+        $task->description = $request->description;
+
+        $task->latitude = $request->latitude;
+
+        $task->longitude = $request->longitude;
+
+       
+        $task->scheduled_at = $request->scheduled_at;
+
         $task->save();
 
         return response()->json([
             'success' => true,
-            'id' => $task->id,
-            'is_done' => $task->is_done
+            'task' => $task
         ]);
 
     } catch (\Throwable $e) {
 
         return response()->json([
-            'message' => 'Error toggle',
+            'message' => 'Error al actualizar',
             'error' => $e->getMessage()
         ], 500);
     }
