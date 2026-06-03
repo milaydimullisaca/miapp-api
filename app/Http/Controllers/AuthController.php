@@ -86,4 +86,19 @@ class AuthController extends Controller
             'token' => $token
         ]);
     }
+    public function changePassword(Request $request)
+{
+    $request->validate([
+        'password' => 'required|min:8|confirmed',
+    ]);
+
+    $user = $request->user();
+
+    $user->password = Hash::make($request->password);
+    $user->save();
+
+    return response()->json([
+        'message' => 'Contraseña actualizada correctamente'
+    ]);
+}
 }
