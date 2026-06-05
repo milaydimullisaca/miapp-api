@@ -40,8 +40,9 @@ class TaskController extends Controller
             'image' => $imagePath,
             'scheduled_at' => $request->scheduled_at,
             'user_id' => auth()->id(),
+            'nivel_educativo' => $request->nivel_educativo,
 
-            // 🔥 IMPORTANTE
+            //  IMPORTANTE
             'is_done' => false,
         ]);
 
@@ -88,6 +89,7 @@ class TaskController extends Controller
         $task->longitude = $request->longitude;
 
         $task->scheduled_at = $request->scheduled_at;
+            $task->nivel_educativo = $request->nivel_educativo;
 
         $task->save();
 

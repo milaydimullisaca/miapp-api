@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->text('description')->nullable();
+            $table->string('nivel_educativo')->nullable();
             $table->string('image')->nullable();
             $table->double('latitude')->nullable();
             $table->double('longitude')->nullable();

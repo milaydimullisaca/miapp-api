@@ -16,6 +16,7 @@ class Task extends Model
         'longitude',
         'user_id',
         'scheduled_at',
-          'is_done',
+        'is_done',
+        'nivel_educativo',
     ];
 }
