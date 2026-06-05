@@ -89,7 +89,7 @@ class TaskController extends Controller
         $task->longitude = $request->longitude;
 
         $task->scheduled_at = $request->scheduled_at;
-            $task->nivel_educativo = $request->nivel_educativo;
+            $task->niveleducativo = $request->niveleducativo;
 
         $task->save();
 
