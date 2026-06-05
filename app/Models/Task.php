@@ -17,6 +17,6 @@ class Task extends Model
         'user_id',
         'scheduled_at',
         'is_done',
-        'nivel_educativo',
+        'niveleducativo',
     ];
 }
