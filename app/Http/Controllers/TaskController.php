@@ -19,35 +19,34 @@ class TaskController extends Controller
 
     // CREAR
     public function store(Request $request)
-    {
-        $request->validate([
-            'title' => 'required',
-            'description' => 'required',
-            'image' => 'nullable|image',
-        ]);
+{
+    $request->validate([
+        'title' => 'required',
+        'description' => 'required',
+        'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120',
+    ]);
 
-        $imagePath = null;
+    $imagePath = null;
 
-        if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('tasks', 'public');
-        }
-
-        $task = Task::create([
-            'title' => $request->title,
-            'description' => $request->description,
-            'latitude' => $request->latitude,
-            'longitude' => $request->longitude,
-            'image' => $imagePath,
-            'scheduled_at' => $request->scheduled_at,
-            'user_id' => auth()->id(),
-            'niveleducativo' => $request->niveleducativo,
-
-            //  IMPORTANTE
-            'is_done' => false,
-        ]);
-
-        return response()->json($task, 201);
+    // 🔥 MEJOR DETECCIÓN DE ARCHIVO
+    if ($request->file('image')) {
+        $imagePath = $request->file('image')->store('tasks', 'public');
     }
+
+    $task = Task::create([
+        'title' => $request->title,
+        'description' => $request->description,
+        'latitude' => $request->latitude,
+        'longitude' => $request->longitude,
+        'image' => $imagePath,
+        'scheduled_at' => $request->scheduled_at,
+        'user_id' => $request->user()->id,
+        'niveleducativo' => $request->niveleducativo,
+        'is_done' => false,
+    ]);
+
+    return response()->json($task, 201);
+}
 
     // MOSTRAR UNO
     public function show(string $id)
